@@ -1,0 +1,1660 @@
+#include<stdio.h>
+#include<dos.h>
+#include<graphics.h>
+#include<conio.h>
+#include<iostream.h>
+#include<stdlib.h>
+int x=30,y=100,lol=1,xmax,ymax;
+void rules(char*);
+void home();
+void name();
+void intro(char*);
+void finish();
+void over();
+void level3(char*);
+void controls(char*);
+void level(char*);
+void level1(char*);
+void level2(char*);
+void movement(int,int,int,int,char*);
+void main()
+{
+	int gd=0,gm;
+	initgraph(&gd,&gm,"c:\\turboc3\\bgi");
+	xmax=getmaxx();
+	ymax=getmaxy();
+	line(0,0,xmax,0);
+	line(0,0,0,ymax);
+	line(xmax,0,xmax,ymax);
+	line(0,ymax,xmax,ymax);
+	setfillstyle(3,1);
+	floodfill(1,1,WHITE);
+	home();
+	getch();
+}
+void home()
+{
+	int i;
+	setbkcolor(0);
+	setcolor(RED);
+	settextstyle(1,0,-1);
+	outtextxy(180,30,"THE");
+	outtextxy(150,160,"MAZE");
+	outtextxy(80,290,"RUNNER");
+	setcolor(WHITE);
+	settextstyle(5,0,1);
+	outtextxy(434,447,"Loading");
+	line(510,460,590,460);
+	line(510,470,590,470);
+	ellipse(510,465,90,270,5,5);
+	ellipse(590,465,270,90,5,5);
+	for(i=1;i<=83;i++)
+	{
+	circle(508+i,465,3);
+	delay(20);
+	}
+	sleep(1);
+	cleardevice();
+	name();
+}
+void name()
+{
+	int ch,y=190,n;
+	char name[20];
+	settextstyle(0,0,1);
+	name[0]='\0';
+	outtextxy(185,198,"NAME");
+	outtextxy(295,232,"ENTER");
+	rectangle(230,190,400,210);
+	rectangle(280,225,350,245);
+	setcolor(4);
+	rectangle(230,y,400,y+20);
+	while(1)
+	{
+		if(kbhit())
+		{
+			ch=getch();
+			n=y;
+			if(ch==72)
+			{
+				if(y==225)
+				{
+				setcolor(WHITE);
+				rectangle(280,n,350,n+20);
+				setcolor(RED);
+				y-=35;
+				rectangle(230,y,400,y+20);
+				}
+
+			}
+			if(ch==80)
+			{
+				if(y==190)
+				{
+				setcolor(WHITE);
+				rectangle(230,y,400,y+20);
+				setcolor(4);
+				y+=35;
+				rectangle(280,y,350,y+20);
+				}
+			}
+			if(ch==13 && y==190)
+			{
+			       setfillstyle(1,0);
+			       floodfill(240,192,RED);
+			       gotoxy(32,13);
+			       gets(name);
+			}
+
+			if(ch==13 && y==225)
+			{
+				setcolor(WHITE);
+				if(name[0]=='\0')
+				outtextxy(225,178,"* Please enter the name");
+				else
+				intro(name);
+				delay(700);
+			       setcolor(0);
+				outtextxy(225,178,"* Please enter the name");
+			}
+			if(ch==27)
+			exit(0);
+		}
+	}
+}
+void intro(char name[])
+{
+	int ch=0,i=0,x=250,y=168,m,n,u;
+	cleardevice();
+	setbkcolor(0);
+	line(0,0,xmax,0);
+	line(0,0,0,ymax);
+	line(xmax,0,xmax,ymax);
+	line(0,ymax,xmax,ymax);
+	setfillstyle(9,1);
+	floodfill(1,1,WHITE);
+	setcolor(RED);
+	settextstyle(7,0,6);
+	outtextxy(90,40,"The Maze Runner");
+	settextstyle(8,0,3);
+	outtextxy(270,150,"PLAY");
+	outtextxy(270,200,"RULES");
+	outtextxy(270,250,"CONTROLS");
+	outtextxy(270,300,"QUIT");
+	setfillstyle(1,0);
+	circle(x,y,4);
+	circle(x,y+50,4);
+	circle(x,y+100,4);
+	circle(x,y+150,4);
+	floodfill(x,y+51,4);
+	floodfill(x,y+101,4);
+	floodfill(x,y+151,4);
+	while(1)
+	{
+		if(ch==13 && y==168)
+		{
+			cleardevice();
+			level(name);
+			break;
+		}
+		if(ch==13 && y==218)
+		{
+		       rules(name);
+		}
+		if(ch==13 && y==318)
+		{
+			exit(0);
+		}
+		if(ch==13 && y==268)
+		{
+			controls(name);
+		}
+		if(y>=168 && y<=318)
+		{
+			if(i==0)
+			{
+			setfillstyle(1,WHITE);
+			floodfill(x,y,RED);
+			i++;
+			n=y;
+			}
+		}
+		if(kbhit())
+		{
+			ch=getch();
+			if(ch==72)
+			{
+				if(y>168)
+				{
+					y=y-50;
+				}
+			}
+			if(ch==80)
+			{
+				if(y<318)
+				{
+					y=y+50;
+				}
+			}
+			if(y>=168 && y<=318)
+			{
+				setfillstyle(1,WHITE);
+				floodfill(x,y,RED);
+				if(y!=168 && y!=318)
+				{
+				setfillstyle(1,0);
+				floodfill(x,n,RED);
+				}
+				n=y;
+			}
+		}
+		if(ch==27)
+		exit(0);
+	}
+}
+
+void rules(char name[])
+{
+	int ch;
+	cleardevice();
+	settextstyle(1,0,7);
+	setbkcolor(0);
+	line(0,0,xmax,0);
+	line(0,0,0,ymax);
+	line(xmax,0,xmax,ymax);
+	line(0,ymax,xmax,ymax);
+	setfillstyle(9,1);
+	floodfill(1,1,WHITE);
+	setcolor(RED);
+	outtextxy(180,40,"RULES");
+	settextstyle(1,0,3);
+	outtextxy(70,150,"> Don't Touch The Red Line.");
+	outtextxy(70,180,"> Don't Move Back.");
+	outtextxy(70,210,"> Complete till the times out.");
+	outtextxy(70,240,"> Complete the current LEVEL for move to");
+	outtextxy(71,263,"  Next.");
+	settextstyle(1,0,5);
+	outtextxy(70,293,"'FOLLOW RULES OR DIE IN");
+	outtextxy(200,330,"MAZE TRAP'");
+	settextstyle(7,0,2);
+	outtextxy(420,440,"* ESC TO GO BACK.");
+	while(1)
+	{
+		if(kbhit())
+		{
+			ch=getch();
+			if(ch==27)
+			{
+				cleardevice();
+				intro(name);
+			}
+		}
+	}
+}
+void controls(char name[])
+{
+	cleardevice();
+	int ch;
+	setbkcolor(0);
+	line(0,0,xmax,0);
+	line(0,0,0,ymax);
+	line(xmax,0,xmax,ymax);
+	line(0,ymax,xmax,ymax);
+	setfillstyle(9,1);
+	floodfill(1,1,WHITE);
+	settextstyle(7,0,6);
+	outtextxy(90,40,"CONTROLS:");
+	settextstyle(7,0,3);
+	outtextxy(120,150,"* ACTION");
+	outtextxy(310,150,"* INPUT");
+	line(180,200,180,215);
+	line(175,207,180,200);
+	line(185,207,180,200);
+	line(180,230,180,245);
+	line(175,237,180,245);
+	line(185,237,180,245);
+	line(175,265,190,265);
+	line(182,260,190,265);
+	line(182,270,190,265);
+	line(175,295,190,295);
+	line(182,290,175,295);
+	line(182,300,175,295);
+	settextstyle(7,0,1);
+	outtextxy(320,195,"MOVE UP");
+	outtextxy(320,225,"MOVE DOWN");
+	outtextxy(320,255,"MOVE RIGHT");
+	outtextxy(320,285,"MOVE LEFT");
+	settextstyle(7,0,2);
+	outtextxy(420,440,"* ESC TO GO BACK.");
+	while(1)
+	{
+		if(kbhit())
+		{
+			ch=getch();
+			if(ch==27)
+			{
+				cleardevice();
+				intro(name);
+			}
+		}
+	}
+}
+
+void movement(int x,int y,int v,int e,char name[])
+{
+	static int s,d,a1=0,xx=518,yy=210,dd=0,cc=0,nn=59,mm=2,mo=1;
+	s=getmaxx();
+	d=getmaxy();
+	setcolor(0);
+	settextstyle(1,0,8);
+	outtextxy(xx-50,yy-110,"TIME");
+	setcolor(WHITE);
+	line(0,0,s,0);
+	line(s,d,s,0);
+	line(s,d,0,d);
+	line(0,0,0,d);
+	line(s-172,80,s-172,d);
+	rectangle(xx-45,yy-10,xx+115,yy+55);
+	setfillstyle(1,YELLOW);
+	floodfill(xx,yy,WHITE);
+	//4th
+	rectangle(xx-35,yy,xx-28,yy+7);
+	rectangle(xx-35,yy+10,xx-28,yy+17);
+	rectangle(xx-35,yy+20,xx-28,yy+27);
+	rectangle(xx-35,yy+30,xx-28,yy+37);
+	rectangle(xx-35,yy+40,xx-28,yy+47);
+	//mid
+	rectangle(xx-25,yy,xx-18,yy+7);
+	rectangle(xx-25,yy+20,xx-18,yy+27);
+	rectangle(xx-25,yy+40,xx-18,yy+47);
+	//4th right
+	rectangle(xx-15,yy,xx-8,yy+7);
+	rectangle(xx-15,yy+10,xx-8,yy+17);
+	rectangle(xx-15,yy+20,xx-8,yy+27);
+	rectangle(xx-15,yy+30,xx-8,yy+37);
+	rectangle(xx-15,yy+40,xx-8,yy+47);
+	// 1st  left
+	rectangle(xx,yy,xx+7,yy+7);
+	rectangle(xx,yy+10,xx+7,yy+17);
+	rectangle(xx,yy+20,xx+7,yy+27);
+	rectangle(xx,yy+30,xx+7,yy+37);
+	rectangle(xx,yy+40,xx+7,yy+47);
+	//mid
+	rectangle(xx+10,yy,xx+17,yy+7);
+	rectangle(xx+10,yy+20,xx+17,yy+27);
+	rectangle(xx+10,yy+40,xx+17,yy+47);
+	//1st right
+	rectangle(xx+20,yy,xx+27,yy+7);
+	rectangle(xx+20,yy+10,xx+27,yy+17);
+	rectangle(xx+20,yy+20,xx+27,yy+27);
+	rectangle(xx+20,yy+30,xx+27,yy+37);
+	rectangle(xx+20,yy+40,xx+27,yy+47);
+	//########################################
+	circle(xx+35,yy+12,4);
+	circle(xx+35,yy+33,4);
+	setfillstyle(1,RED);
+	floodfill(xx+35,yy+12,WHITE);
+	floodfill(xx+35,yy+33,WHITE);
+	//#########################################
+	// 2nd  left
+	rectangle(xx+45,yy,xx+52,yy+7);
+	rectangle(xx+45,yy+10,xx+52,yy+17);
+	rectangle(xx+45,yy+20,xx+52,yy+27);
+	rectangle(xx+45,yy+30,xx+52,yy+37);
+	rectangle(xx+45,yy+40,xx+52,yy+47);
+	//mid
+	rectangle(xx+55,yy,xx+62,yy+7);
+	rectangle(xx+55,yy+20,xx+62,yy+27);
+	rectangle(xx+55,yy+40,xx+62,yy+47);
+	//2nd right
+	rectangle(xx+65,yy,xx+72,yy+7);
+	rectangle(xx+65,yy+10,xx+72,yy+17);
+	rectangle(xx+65,yy+20,xx+72,yy+27);
+	rectangle(xx+65,yy+30,xx+72,yy+37);
+	rectangle(xx+65,yy+40,xx+72,yy+47);
+	//######################################
+	// 3rd  left
+	rectangle(xx+80,yy,xx+87,yy+7);
+	rectangle(xx+80,yy+10,xx+87,yy+17);
+	rectangle(xx+80,yy+20,xx+87,yy+27);
+	rectangle(xx+80,yy+30,xx+87,yy+37);
+	rectangle(xx+80,yy+40,xx+87,yy+47);
+	//mid
+	rectangle(xx+90,yy,xx+97,yy+7);
+	rectangle(xx+90,yy+20,xx+97,yy+27);
+	rectangle(xx+90,yy+40,xx+97,yy+47);
+	//3rd right
+	rectangle(xx+100,yy,xx+107,yy+7);
+	rectangle(xx+100,yy+10,xx+107,yy+17);
+	rectangle(xx+100,yy+20,xx+107,yy+27);
+	rectangle(xx+100,yy+30,xx+107,yy+37);
+	rectangle(xx+100,yy+40,xx+107,yy+47);
+	setcolor(0);
+	settextstyle(1,0,3);
+	outtextxy(475,280,"Player Name :");
+	gotoxy(62,21);
+	puts(name);
+	setcolor(0);
+	settextstyle(1,0,4);
+	outtextxy(510,345,"MODE");
+	if(mo==1)
+	{
+		outtextxy(510,390,"EASY");
+		mo++;
+	}
+	else if(mo==2)
+	{
+		outtextxy(490,390,"MEDIUM");
+		mo++;
+	}
+	else
+	{
+		outtextxy(510,390,"HARD");
+	}
+	setcolor(e);
+	int ch,zx,a=0,b=-10,ad,m=0,n=0,i=0,a2=0;
+	while(mm!=-1)
+	{
+		if(zx==WHITE)
+		{
+			cleardevice();
+			settextstyle(1,0,6);
+			outtextxy(250,180,"Oops! ");
+			outtextxy(120,250,"You Turn Back ");
+			getch();
+			delay(800);
+			over();
+			break;
+		}
+		if(ad==v)
+		{
+			delay(800);
+			over();
+			break;
+		}
+		if(ad==e)
+		{
+			delay(20);
+			if(lol!=4)
+			{
+			level(name);
+			break;
+			}
+			else
+			{
+			finish();
+			break;
+			}
+		}
+		if(i==0)
+		{       setcolor(WHITE);
+			circle(x,y,1);
+			i++;
+		}
+		else
+		{
+		setcolor(WHITE);
+		circle(m,n,1);
+		setcolor(BLUE);
+		circle(x,y,1);
+		}
+		m=x;
+		n=y;
+		setcolor(RED);
+		settextstyle(1,0,1);
+		outtextxy(475,430,"Press Esc to go");
+		outtextxy(480,445," main menu");
+		if(kbhit())                                            //check//if a key is pressed
+		{
+			ch=getch();
+			if(ch==72)                           //move upward
+			{
+				a=0;
+				b=-10;
+				x=x+a;
+				y=y+b;
+			}
+			if(ch==75)                           //move left
+			{
+				a=-10;
+				b=0;
+				x=x+a;
+				y=y+b;
+			}
+			if(ch==77)                           //move right
+			{
+				a=10;
+				b=0;
+				x=x+a;
+				y=y+b;
+			}
+			if(ch==80)                           //move downward
+			{
+				a=0;
+				b=10;
+				x=x+a;
+				y=y+b;
+			}
+			if(ch==27)                           //exit when esc pressed
+			intro(name);
+			zx=getpixel(x+1,y);
+			ad=getpixel(x,y);
+			a2++;
+		}
+		delay(1);
+		a1++;
+		if(a2!=0)
+		{
+		dd=nn%10;
+		cc=nn/10;
+		setfillstyle(1,RED);
+		{
+		floodfill(xx-33,yy+2,WHITE);
+		floodfill(xx-33,yy+12,WHITE);
+		floodfill(xx-33,yy+22,WHITE);
+		floodfill(xx-33,yy+42,WHITE);
+		floodfill(xx-13,yy+2,WHITE);
+		floodfill(xx-13,yy+12,WHITE);
+		floodfill(xx-13,yy+22,WHITE);
+		floodfill(xx-33,yy+32,WHITE);
+		floodfill(xx-23,yy+2,WHITE);
+		floodfill(xx-13,yy+42,WHITE);
+		floodfill(xx-13,yy+32,WHITE);
+		floodfill(xx-23,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		floodfill(xx-23,yy+22,WHITE);
+	switch(dd)
+	{
+		case 1:
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+92,yy+22,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		}
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		}
+		break;
+		case 2:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+92,yy+22,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+102,yy+32,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		}
+		break;
+		case 3:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+92,yy+22,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		}
+		break;
+		case 4:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+92,yy+22,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		}
+		break;
+		case 5:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+92,yy+22,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		}
+		break;
+		case 6:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+92,yy+22,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+102,yy+12,WHITE);
+		}
+		break;
+		case 7:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+92,yy+22,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		}
+		break;
+		case 8:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+92,yy+22,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		}
+		break;
+		case 9:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+92,yy+22,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+82,yy+32,WHITE);
+		}
+		break;
+		case 0:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		floodfill(xx+92,yy+22,WHITE);
+		break;
+	}
+	switch(cc)
+	{
+		case 1:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+68,yy+12,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+68,yy+32,WHITE);
+		floodfill(xx+68,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+48,yy+12,WHITE);
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+48,yy+32,WHITE);
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		floodfill(xx+58,yy+22,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		}
+		break;
+		case 2:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+68,yy+12,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+68,yy+42,WHITE);
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		floodfill(xx+48,yy+32,WHITE);
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+58,yy+22,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+68,yy+32,WHITE);
+		floodfill(xx+48,yy+12,WHITE);
+		}
+		break;
+		case 3:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+68,yy+12,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+68,yy+42,WHITE);
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+58,yy+22,WHITE);
+		floodfill(xx+68,yy+32,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+48,yy+12,WHITE);
+		floodfill(xx+48,yy+32,WHITE);
+		}
+		break;
+		case 4:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+68,yy+12,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+68,yy+42,WHITE);
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+48,yy+12,WHITE);
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+58,yy+22,WHITE);
+		floodfill(xx+68,yy+32,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		floodfill(xx+48,yy+32,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		}
+		break;
+		case 5:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+68,yy+42,WHITE);
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+48,yy+12,WHITE);
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+58,yy+22,WHITE);
+		floodfill(xx+68,yy+32,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+68,yy+12,WHITE);
+		floodfill(xx+48,yy+32,WHITE);
+		}
+		break;
+		case 6:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+42,WHITE);
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+48,yy+12,WHITE);
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+58,yy+22,WHITE);
+		floodfill(xx+68,yy+32,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+48,yy+32,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+68,yy+12,WHITE);
+		}
+		break;
+		case 7:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+68,yy+12,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+68,yy+42,WHITE);
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+68,yy+32,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+58,yy+22,WHITE);
+		floodfill(xx+48,yy+12,WHITE);
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+48,yy+32,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		}
+		break;
+		case 8:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+68,yy+12,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+68,yy+42,WHITE);
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+48,yy+12,WHITE);
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+58,yy+22,WHITE);
+		floodfill(xx+68,yy+32,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+48,yy+32,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		}
+		break;
+		case 9:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+68,yy+12,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+68,yy+42,WHITE);
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+48,yy+12,WHITE);
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+58,yy+22,WHITE);
+		floodfill(xx+68,yy+32,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+48,yy+32,WHITE);
+		}
+		break;
+		case 0:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+68,yy+2,WHITE);
+		floodfill(xx+68,yy+12,WHITE);
+		floodfill(xx+68,yy+22,WHITE);
+		floodfill(xx+68,yy+42,WHITE);
+		floodfill(xx+48,yy+2,WHITE);
+		floodfill(xx+48,yy+12,WHITE);
+		floodfill(xx+48,yy+22,WHITE);
+		floodfill(xx+68,yy+32,WHITE);
+		floodfill(xx+58,yy+2,WHITE);
+		floodfill(xx+48,yy+42,WHITE);
+		floodfill(xx+48,yy+32,WHITE);
+		floodfill(xx+58,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		floodfill(xx+58,yy+22,WHITE);
+		break;
+		}
+		switch(mm)
+		{
+		case 1:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+23,yy+12,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+23,yy+32,WHITE);
+		floodfill(xx+23,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+3,yy+12,WHITE);
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+3,yy+32,WHITE);
+		floodfill(xx+3,yy+42,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		floodfill(xx+13,yy+22,WHITE);
+		floodfill(xx+13,yy+42,WHITE);
+		}
+		break;
+		case 2:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+23,yy+12,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+23,yy+42,WHITE);
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+3,yy+42,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		floodfill(xx+13,yy+42,WHITE);
+		floodfill(xx+3,yy+32,WHITE);
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+13,yy+22,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+23,yy+32,WHITE);
+		floodfill(xx+3,yy+12,WHITE);
+		}
+		break;
+		case 3:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+23,yy+12,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+23,yy+42,WHITE);
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+3,yy+42,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		floodfill(xx+13,yy+42,WHITE);
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+13,yy+22,WHITE);
+		floodfill(xx+23,yy+32,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+3,yy+12,WHITE);
+		floodfill(xx+3,yy+32,WHITE);
+		}
+		break;
+		case 4:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+23,yy+12,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+23,yy+42,WHITE);
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+3,yy+12,WHITE);
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+13,yy+22,WHITE);
+		floodfill(xx+23,yy+32,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+3,yy+42,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		floodfill(xx+3,yy+32,WHITE);
+		floodfill(xx+13,yy+42,WHITE);
+		}
+		break;
+		case 5:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+23,yy+42,WHITE);
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+3,yy+12,WHITE);
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+13,yy+22,WHITE);
+		floodfill(xx+23,yy+32,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		floodfill(xx+3,yy+42,WHITE);
+
+		floodfill(xx+13,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+23,yy+12,WHITE);
+		floodfill(xx+3,yy+32,WHITE);
+		}
+		break;
+		case 6:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+42,WHITE);
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+3,yy+12,WHITE);
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+13,yy+22,WHITE);
+		floodfill(xx+23,yy+32,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+3,yy+42,WHITE);
+		floodfill(xx+3,yy+32,WHITE);
+		floodfill(xx+13,yy+42,WHITE);
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+23,yy+12,WHITE);
+		}
+		break;
+		case 7:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+23,yy+12,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+23,yy+42,WHITE);
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+23,yy+32,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+13,yy+22,WHITE);
+		floodfill(xx+3,yy+12,WHITE);
+		floodfill(xx+3,yy+42,WHITE);
+		floodfill(xx+3,yy+32,WHITE);
+		floodfill(xx+13,yy+42,WHITE);
+		}
+		break;
+		case 8:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+23,yy+12,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+23,yy+42,WHITE);
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+3,yy+12,WHITE);
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+13,yy+22,WHITE);
+		floodfill(xx+23,yy+32,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		floodfill(xx+3,yy+42,WHITE);
+		floodfill(xx+3,yy+32,WHITE);
+		floodfill(xx+13,yy+42,WHITE);
+		}
+		break;
+		case 9:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+23,yy+12,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+23,yy+42,WHITE);
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+3,yy+12,WHITE);
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+13,yy+22,WHITE);
+		floodfill(xx+23,yy+32,WHITE);
+		floodfill(xx+13,yy+42,WHITE);
+		floodfill(xx+3,yy+42,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		{
+		floodfill(xx+3,yy+32,WHITE);
+		}
+		break;
+		case 0:
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+23,yy+2,WHITE);
+		floodfill(xx+23,yy+12,WHITE);
+		floodfill(xx+23,yy+22,WHITE);
+		floodfill(xx+23,yy+42,WHITE);
+		floodfill(xx+3,yy+2,WHITE);
+		floodfill(xx+3,yy+12,WHITE);
+		floodfill(xx+3,yy+22,WHITE);
+		floodfill(xx+23,yy+32,WHITE);
+		floodfill(xx+13,yy+2,WHITE);
+		floodfill(xx+3,yy+42,WHITE);
+		floodfill(xx+3,yy+32,WHITE);
+		floodfill(xx+13,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		floodfill(xx+13,yy+22,WHITE);
+		break;
+		}
+		if(a1%150==0)
+		nn--;
+		if(mm==0 && nn==0)
+		{
+		delay(500);
+		setfillstyle(1,RED);
+		{
+		floodfill(xx+102,yy+2,WHITE);
+		floodfill(xx+102,yy+12,WHITE);
+		floodfill(xx+102,yy+22,WHITE);
+		floodfill(xx+102,yy+42,WHITE);
+		floodfill(xx+82,yy+2,WHITE);
+		floodfill(xx+82,yy+12,WHITE);
+		floodfill(xx+82,yy+22,WHITE);
+		floodfill(xx+102,yy+32,WHITE);
+		floodfill(xx+92,yy+2,WHITE);
+		floodfill(xx+82,yy+42,WHITE);
+		floodfill(xx+82,yy+32,WHITE);
+		floodfill(xx+92,yy+42,WHITE);
+		}
+		setfillstyle(1,YELLOW);
+		floodfill(xx+92,yy+22,WHITE);
+		delay(500);
+		cleardevice();
+		settextstyle(1,0,6);
+		outtextxy(200,200,"Time Out");
+		sleep(1);
+		exit(0);
+		}
+		if(nn==0)
+		{
+		mm--;
+		nn=59;
+		}
+	}
+	}
+}
+void level(char name[])
+{
+	cleardevice();
+	line(0,0,xmax,0);
+	line(0,0,0,ymax);
+	line(xmax,0,xmax,ymax);
+	line(0,ymax,xmax,ymax);
+	setfillstyle(9,9);
+	floodfill(1,1,WHITE);
+	setcolor(GREEN);
+	setbkcolor(0);
+	settextstyle(1,0,6);
+	if(lol==1)
+	{
+	lol++;
+	outtextxy(230,200,"LEVEL 1");
+	settextstyle(5,0,3);
+	outtextxy(430,440,"Press any key...");
+	getch();
+	level1(name);
+	}
+	else if(lol==2)
+	{
+	lol++;
+	outtextxy(230,200,"LEVEL 2");
+	settextstyle(5,0,3);
+	outtextxy(430,440,"Press any key...");
+	getch();
+	level2(name);
+	}
+	else if(lol==3)
+	{
+	lol++;
+	outtextxy(230,200,"LEVEL 3");
+	settextstyle(5,0,3);
+	outtextxy(430,440,"Press any key...");
+	getch();
+	level3(name);
+	}
+	else
+	{
+	finish();
+	}
+}
+
+void level1(char name[])
+{
+	cleardevice();
+	int i,x=25,y=130,s,d;
+	s=getmaxx();
+	d=getmaxy();
+	setcolor(6);
+	settextstyle(1,0,9);
+	outtextxy(100,-20,"ROUND 1");
+	setcolor(WHITE);
+	line(0,y-50,s,y-50);
+	line(0,y-50,0,d);
+	setfillstyle(1,8);                              //
+	floodfill(5,y-20,WHITE);                          //
+	setbkcolor(0);
+	setcolor(RED);
+	for(i=0;i<=1;i++)
+	{
+	line(x,y,x+150,y);                  //boundary part
+	line(x+170,y,x+400,y);
+	line(x+400,y,x+400,y+200);
+	line(x+400,y+220,x+400,y+300);
+	line(x+400,y+300,x,y+300);
+	line(x,y+300,x,y);
+	}
+	line(x+20,y+20,x+270,y+20);               //1 part
+	line(x+20,y+20,x+20,y+120);
+	line(x+20,y+120,x+120,y+120);
+	line(x+40,y+40,x+200,y+40);
+	line(x+40,y+40,x+40,y+100);
+	line(x+40,y+100,x+160,y+100);
+	line(x+160,y+100,x+160,y+60);
+	line(x+160,y+60,x+60,y+60);
+	line(x+60,y+60,x+60,y+80);
+	line(x+60,y+80,x+130,y+80);
+	line(x+200,y+40,x+200,y+160);
+	line(x+200,y+160,x+180,y+160);
+	line(x+180,y+160,x+180,y+140);
+	line(x+180,y+60,x+180,y+120);
+	line(x+140,y+120,x+200,y+120);
+	line(x+270,y+20,x+270,y+50);                // 2 part
+	line(x+250,y+40,x+220,y+40);
+	line(x+240,y+40,x+240,y+70);
+	line(x+220,y+40,x+220,y+180);
+	line(x+220,y+180,x+160,y+180);
+	line(x+160,y+180,x+160,y+140);
+	line(x+240,y+70,x+300,y+70);
+	line(x+240,y+70,x+240,y+100);
+	line(x+300,y+70,x+300,y+120);
+	line(x+300,y+120,x+240,y+120);
+	line(x+280,y+120,x+280,y+100);
+	line(x+260,y+120,x+260,y+100);
+	line(x+290,y,x+290,y+70);
+	line(x+290,y+50,x+310,y+50);
+	line(x+310,y+50,x+310,y);
+	line(x+330,y+20,x+330,y+70);
+	line(x+330,y+70,x+320,y+70);
+	line(x+320,y+70,x+320,y+140);
+	line(x+350,y+20,x+350,y+90);
+	line(x+350,y+90,x+340,y+90);
+	line(x+340,y+90,x+340,y+120);
+	line(x+340,y+120,x+380,y+120);
+	line(x+400,y+100,x+370,y+100);
+	line(x+370,y+100,x+370,y);
+	line(x+20,y+140,x+140,y+140);
+	line(x+140,y+120,x+140,y+200);
+	line(x+40,y+140,x+40,y+200);
+	line(x+40,y+200,x+20,y+200);
+	line(x,y+160,x+20,y+160);
+	line(x,y+180,x+20,y+180);
+	line(x+200,y+200,x+60,y+200);
+	line(x+60,y+200,x+60,y+160);
+	line(x+60,y+160,x+120,y+160);
+	line(x+120,y+160,x+120,y+180);
+	line(x+120,y+180,x+80,y+180);
+	line(x+240,y+120,x+240,y+200);
+	line(x+220,y+200,x+400,y+200);
+	line(x+260,y+140,x+380,y+140);
+	line(x+260,y+160,x+380,y+160);
+	line(x+260,y+180,x+380,y+180);
+	line(x,y+220,x+200,y+220);      //3 part
+	line(x+220,y+200,x+220,y+280);
+	line(x+220,y+280,x+180,y+280);
+	line(x+160,y+280,x+20,y+280);
+	line(x+20,y+280,x+20,y+240);
+	line(x+20,y+240,x+200,y+240);
+	line(x+200,y+220,x+200,y+260);
+	line(x+200,y+260,x+40,y+260);
+	line(x+380,y+220,x+240,y+220);      //4 part
+	line(x+380,y+240,x+260,y+240);
+	line(x+360,y+260,x+220,y+260);
+	line(x+240,y+220,x+240,y+260);
+	line(x+240,y+300,x+240,y+280);
+	line(x+260,y+280,x+380,y+280);
+	line(x+380,y+260,x+380,y+280);
+	line(x+380,y+240,x+400,y+240);
+	line(x+150,y-10,x+170,y-10);
+	line(x+150,y-10,x+150,y);
+	line(x+170,y-10,x+170,y);
+	setcolor(GREEN);
+	circle(x+400,y+210,1);
+	setfillstyle(1,GREEN);
+	floodfill(x+400,y+210,GREEN);
+	setcolor(2);
+	settextstyle(1,0,1);
+	outtextxy(x+102,y-23,"Start");
+	setcolor(1);
+	outtextxy(x+405,y+197,"Exit");
+	movement(x+160,y,RED,GREEN,name);
+}
+void level2(char name[])
+{
+	cleardevice();
+	int i,x=25,y=60,s,d;
+	s=getmaxx();
+	d=getmaxy();
+	setcolor(6);
+	settextstyle(1,0,9);
+	outtextxy(100,-20,"ROUND 2");
+	setcolor(WHITE);
+	line(0,y+20,s,y+20);
+	line(0,y+20,0,d);
+	setfillstyle(1,8);                              //
+	floodfill(5,y+40,WHITE);                          //
+	setbkcolor(0);
+	setcolor(RED);
+	line(x,y+100,x+100,y+100);
+	line(x+300,y+60,x+400,y+60);
+	line(x+380,y+80,x+380,y+140);
+	line(x+380,y+160,x+380,y+300);
+	line(x+400,y+60,x+400,y+300);
+	line(x+400,y+300,x+100,y+300);
+	line(x+360,y+280,x+80,y+280);
+	line(x+80,y+280,x+80,y+300);
+	line(x+360,y+280,x+360,y+240);
+	line(x+360,y+240,x+180,y+240);
+	line(x+180,y+220,x+180,y+240);
+	line(x+160,y+240,x+160,y+260);
+	line(x+120,y+260,x+340,y+260);
+	line(x+380,y+220,x+320,y+220);
+	line(x+320,y+220,x+320,y+160);
+	line(x+320,y+160,x+360,y+160);
+	line(x+360,y+160,x+360,y+200);
+	line(x+360,y+200,x+340,y+200);
+	line(x+340,y+200,x+340,y+180);
+	line(x+380,y+140,x+180,y+140);
+	line(x+180,y+140,x+180,y+220);
+	line(x+180,y+220,x+300,y+220);
+	line(x+300,y+220,x+300,y+160);
+	line(x+300,y+160,x+200,y+160);
+	line(x+200,y+160,x+200,y+200);
+	line(x+220,y+180,x+220,y+220);
+	line(x+220,y+180,x+280,y+180);
+	line(x+280,y+180,x+280,y+200);
+	line(x+280,y+200,x+240,y+200);
+	line(x+160,y+240,x+160,y+60);
+	line(x+160,y+60,x+100,y+60);
+	line(x+180,y+60,x+220,y+60);
+	line(x+180,y+60,x+180,y+120);
+	line(x+180,y+120,x+260,y+120);
+	line(x+260,y+120,x+260,y+60);
+	line(x+260,y+60,x+240,y+60);
+	line(x+240,y+60,x+240,y+100);
+	line(x+220,y+120,x+220,y+80);
+	line(x+220,y+80,x+200,y+80);
+	line(x+200,y+80,x+200,y+100);
+	line(x+120,y+60,x+300,y+60);
+	line(x+280,y+80,x+360,y+80);
+	line(x+360,y+120,x+280,y+120);
+	line(x+280,y+120,x+280,y+100);
+	line(x+280,y+100,x+340,y+100);
+	line(x+100,y+100,x+140,y+100);
+	line(x+140,y+100,x+140,y+80);
+	line(x+140,y+80,x+120,y+80);
+	line(x+160,y+120,x+80,y+120);
+	line(x+60,y+100,x+60,y+220);
+	line(x+60,y+220,x+40,y+220);
+	line(x+40,y+100,x+40,y+200);
+	line(x+20,y+120,x+20,y+280);
+	line(x+20,y+280,x,y+280);
+	line(x+40,y+280,x+40,y+240);
+	line(x+40,y+240,x+40,y+280);
+	line(x+40,y+240,x+120,y+240);
+	line(x+120,y+240,x+120,y+260);
+	line(x+120,y+260,x+60,y+260);
+	line(x+80,y+220,x+80,y+140);
+	line(x+80,y+220,x+140,y+220);
+	line(x+140,y+220,x+140,y+260);
+	line(x+80,y+140,x+140,y+140);
+	line(x+140,y+140,x+140,y+200);
+	line(x+140,y+180,x+120,y+180);
+	line(x+140,y+200,x+100,y+200);
+	line(x+100,y+200,x+100,y+160);
+	line(x+100,y+160,x+120,y+160);
+	line(x,y+100,x,y+400);
+	line(x,y+400,x+300,y+400);
+	line(x+20,y+320,x+20,y+380);
+	line(x+20,y+380,x+40,y+380);
+	line(x+40,y+380,x+40,y+280);
+	line(x+40,y+300,x+20,y+300);
+	line(x+60,y+300,x+80,y+300);
+	line(x+60,y+300,x+60,y+380);
+	line(x+60,y+380,x+180,y+380);
+	line(x+180,y+380,x+180,y+400);
+	line(x+80,y+300,x+80,y+360);
+	line(x+80,y+360,x+180,y+360);
+	line(x+100,y+300,x+100,y+340);
+	line(x+100,y+340,x+240,y+340);
+	line(x+240,y+340,x+240,y+320);
+	line(x+240,y+320,x+120,y+320);
+	line(x+260,y+300,x+260,y+360);
+	line(x+260,y+360,x+200,y+360);
+	line(x+200,y+360,x+200,y+380);
+	line(x+200,y+380,x+280,y+380);
+	line(x+280,y+380,x+280,y+320);
+	line(x+300,y+300,x+300,y+380);
+	line(x+100,y+80,x+130,y+80);
+	line(x+100,y+60,x+100,y+80);
+	setcolor(GREEN);
+	circle(x+300,y+390,1);
+	setfillstyle(1,GREEN);
+	floodfill(x+300,y+390,GREEN);
+	setcolor(2);
+	settextstyle(1,0,1);
+	outtextxy(x+30,y+60,"Start");
+	setcolor(1);
+	outtextxy(x+310,y+380,"Exit");
+	movement(x+110,y+70,RED,GREEN,name);
+}
+void level3(char name[])
+{
+	int s,d;
+	cleardevice();
+	s=getmaxx();
+	d=getmaxy();
+	setcolor(6);
+	settextstyle(1,0,9);
+	outtextxy(100,-20,"ROUND 3");
+	setcolor(WHITE);
+	line(0,y-20,s,y-20);
+	line(0,y-50,0,d);
+	setfillstyle(1,8);
+	floodfill(5,y-8,WHITE);
+	setbkcolor(0);
+	setcolor(RED);
+	int i;
+	for(i=0;i<=1;i++)
+	{
+	line(x+30+1,y-i,x+390,y-i);             //h
+	line(x+30+i,y+40+1,x+30+i,y+360);
+	line(x+30+1,y+360+i,x+390,y+360+i);    //h
+	line(x+390-i,y+1,x+390-i,y+360);
+	}
+	line(x+30,y,x+30,y+20);
+	line(x+30,y+20,x+170,y+20);
+	line(x+170,y+20,x+170,y+40);
+	line(x+190,y+20,x+230,y+20);
+	line(x+250,y+20,x+310,y+20);
+	line(x+330,y+20,x+390,y+20);
+	line(x+30,y+40,x+50,y+40);
+	line(x+70,y+40,x+150,y+40);
+	line(x+70,y+20,x+70,y+40);
+	line(x+170,y+40,x+270,y+40);            //y+40
+	line(x+290,y+40,x+310,y+40);
+	line(x+330,y+40,x+370,y+40);
+	line(x+230,y+20,x+230,y+40);      //ve
+	line(x+50,y+40,x+50,y+60);
+	line(x+70,y+60,x+130,y+60);
+	line(x+130,y+40,x+130,y+100);
+	line(x+70,y+60,x+70,y+80);
+	line(x+70,y+80,x+110,y+80);
+	line(x+110,y+80,x+110,y+120);
+	line(x+110,y+120,x+230,y+120);
+	line(x+150,y+60,x+150,y+100);
+	line(x+150,y+100,x+250,y+100);
+	line(x+250,y+100,x+250,y+140);
+	line(x+230,y+140,x+250,y+140);
+	line(x+230,y+120,x+230,y+140);
+	line(x+170,y+60,x+170,y+100);
+	line(x+170,y+60,x+250,y+60);
+	line(x+170,y+80,x+190,y+80);
+	line(x+210,y+80,x+270,y+80);
+	line(x+270,y+40,x+270,y+160);
+	line(x+290,y+20,x+290,y+100);
+	line(x+290,y+100,x+350,y+100);
+	line(x+310,y+40,x+310,y+80);
+	line(x+330,y+40,x+330,y+100);
+	line(x+370,y+40,x+370,y+120);
+	line(x+330,y+120,x+370,y+120);
+	line(x+350,y+60,x+370,y+60);
+	line(x+350,y+80,x+370,y+80);
+	line(x+330,y+120,x+330,y+160);
+	line(x+310,y+140,x+330,y+140);
+	line(x+270,y+140,x+290,y+140);
+	line(x+290,y+120,x+290,y+140);
+	line(x+290,y+120,x+310,y+120);
+	line(x+250,y+160,x+310,y+160);
+	line(x+330,y+160,x+370,y+160);
+	line(x+350,y+180,x+350,y+140);
+	line(x+350,y+140,x+370,y+140);
+	line(x+350,y+180,x+390,y+180);
+	line(x+370,y+200,x+370,y+300);
+	line(x+350,y+200,x+370,y+200);
+	line(x+350,y+200,x+350,y+280);
+	line(x+370,y+300,x+390,y+300);
+	line(x+290,y+160,x+290,y+180);
+	line(x+290,y+180,x+330,y+180);
+	line(x+330,y+180,x+330,y+200);
+	line(x+270,y+200,x+330,y+200);
+	line(x+270,y+180,x+270,y+200);
+	line(x+210,y+180,x+270,y+180);
+	line(x+210,y+120,x+210,y+180);
+	line(x+210,y+160,x+230,y+160);
+	line(x+50,y+100,x+90,y+100);
+	line(x+30,y+120,x+70,y+120);
+	line(x+50,y+100,x+50,y+120);
+	line(x+130,y+140,x+190,y+140);
+	line(x+130,y+120,x+130,y+140);
+	line(x+190,y+140,x+190,y+220);
+	line(x+190,y+200,x+230,y+200);
+	line(x+250,y+200,x+250,y+320);
+	line(x+150,y+240,x+210,y+240);
+	line(x+210,y+220,x+210,y+240);
+	line(x+210,y+220,x+250,y+220);
+	line(x+150,y+220,x+170,y+220);
+	line(x+170,y+160,x+170,y+220);
+	line(x+170,y+160,x+190,y+160);
+	line(x+70,y+160,x+150,y+160);
+	line(x+110,y+140,x+110,y+160);
+	line(x+90,y+140,x+110,y+140);
+	line(x+90,y+100,x+90,y+140);
+	line(x+70,y+120,x+70,y+140);
+	line(x+50,y+140,x+70,y+140);
+	line(x+50,y+140,x+50,y+180);
+	line(x+90,y+160,x+90,y+240);
+	line(x+90,y+180,x+150,y+180);
+	line(x+110,y+200,x+150,y+200);
+	line(x+90,y+220,x+130,y+220);
+	line(x+90,y+240,x+130,y+240);
+	line(x+150,y+200,x+150,y+340);
+	line(x+70,y+180,x+70,y+240);
+	line(x+30,y+200,x+70,y+200);
+	line(x+50,y+200,x+50,y+220);
+	line(x+50,y+240,x+70,y+240);
+	line(x+50,y+240,x+50,y+260);
+	line(x+50,y+260,x+130,y+260);
+	line(x+90,y+280,x+170,y+280);
+	line(x+170,y+280,x+170,y+300);
+	line(x+90,y+280,x+90,y+320);
+	line(x+70,y+300,x+70,y+320);
+	line(x+70,y+320,x+90,y+320);
+	line(x+70,y+260,x+70,y+280);
+	line(x+50,y+280,x+70,y+280);
+	line(x+50,y+280,x+50,y+300);
+	line(x+30,y+320,x+50,y+320);
+	line(x+50,y+320,x+50,y+340);
+	line(x+70,y+340,x+110,y+340);
+	line(x+110,y+300,x+110,y+360);
+	line(x+110,y+300,x+130,y+300);
+	line(x+130,y+300,x+130,y+320);
+	line(x+130,y+340,x+190,y+340);
+	line(x+150,y+320,x+190,y+320);
+	line(x+170,y+240,x+170,y+260);
+	line(x+170,y+260,x+210,y+260);
+	line(x+210,y+260,x+210,y+280);
+	line(x+190,y+260,x+190,y+300);
+	line(x+190,y+300,x+230,y+300);
+	line(x+230,y+240,x+230,y+300);
+	line(x+210,y+300,x+210,y+340);
+	line(x+210,y+340,x+270,y+340);
+	line(x+270,y+300,x+270,y+340);
+	line(x+250,y+240,x+270,y+240);
+	line(x+270,y+220,x+270,y+240);
+	line(x+290,y+220,x+290,y+260);
+	line(x+270,y+260,x+290,y+260);
+	line(x+270,y+260,x+270,y+280);
+	line(x+270,y+280,x+350,y+280);
+	line(x+310,y+220,x+310,y+280);
+	line(x+310,y+220,x+330,y+220);
+	line(x+310,y+240,x+330,y+240);
+	line(x+330,y+260,x+350,y+260);
+	line(x+270,y+300,x+270,y+340);
+	line(x+270,y+300,x+330,y+300);
+	line(x+290,y+300,x+290,y+340);
+	line(x+290,y+320,x+370,y+320);
+	line(x+350,y+300,x+350,y+320);
+	line(x+370,y+320,x+370,y+340);
+	line(x+310,y+340,x+310,y+360);
+	line(x+310,y+340,x+350,y+340);
+	line(x+230,y+320,x+250,y+320);
+	line(x+30,y+80,x+50,y+80);
+	setcolor(GREEN);
+	circle(x+30,y+30,1);
+	setfillstyle(1,GREEN);
+	floodfill(x+30,y+30,GREEN);
+	setcolor(2);
+	settextstyle(1,0,1);
+	outtextxy(x-18,y-3,"Start");
+	setcolor(1);
+	outtextxy(x-15,y+18,"Exit");
+	movement(x+40,y+10,RED,GREEN,name);
+}
+
+void over()
+
+{
+	int i;
+	setcolor(6);
+	cleardevice();
+	delay(10);
+	settextstyle(2,0,4);
+	for(i=1;i<=7;i++)
+	{
+		settextstyle(1,0,2+i);
+		outtextxy(250-(i*25),210,"GAME OVER");
+		delay(400);
+		cleardevice();
+	}
+	exit(0);
+}
+void finish()
+{
+	cleardevice();
+	setcolor(YELLOW);
+	settextstyle(1,0,6);
+	outtextxy(200,200,"FINISH");
+}
